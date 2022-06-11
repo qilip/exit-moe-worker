@@ -1,0 +1,8 @@
+name = "exitmoe"
+main = "src/index.js"
+workers_dev = false
+compatibility_date = "2022-06-01"
+
+kv_namespaces = [
+    { binding = "SURL", id = "8ec4e03727d44094ac7a705b1362b5ea", preview_id = "7a664ee6ca2b4092ac4255c8cc25e0ab" }
+]
