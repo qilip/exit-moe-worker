@@ -1,0 +1,3 @@
+# exit.moe
+
+Hi!
