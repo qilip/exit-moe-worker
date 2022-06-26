@@ -45,14 +45,19 @@ router.get('/:slug', async req => {
   });
 });
 
-router.options('/', async req => {
+router.options('*', async req => {
   return new Response(null, {
     headers: {
       'Access-Control-Allow-Origin': 'https://exit.moe',
-      'Access-Control-Allow-Methods': 'POST, GET, OPTIONS',
+      'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
+      'Access-Control-Max-Age': '86400',
       },
       status: 200,
   });
+});
+
+router.all('*', async req => {
+  return new Response('404 Not found', { status: 404 });
 });
 
 addEventListener('fetch', event => {
