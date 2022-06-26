@@ -50,6 +50,7 @@ router.options('*', async req => {
     headers: {
       'Access-Control-Allow-Origin': 'https://exit.moe',
       'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
+      'Access-Control-Allow-Headers': 'Content-Type',
       'Access-Control-Max-Age': '86400',
       },
       status: 200,
