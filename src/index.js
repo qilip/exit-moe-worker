@@ -45,6 +45,16 @@ router.get('/:slug', async req => {
   });
 });
 
+router.options('/', async req => {
+  return new Response(null, {
+    headers: {
+      'Access-Control-Allow-Origin': 'https://exit.moe',
+      'Access-Control-Allow-Methods': 'POST, GET, OPTIONS',
+      },
+      status: 200,
+  });
+});
+
 addEventListener('fetch', event => {
   event.respondWith(router.handle(event.request))
 })
