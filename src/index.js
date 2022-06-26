@@ -48,7 +48,7 @@ router.get('/:slug', async req => {
 router.options('*', async req => {
   return new Response(null, {
     headers: {
-      'Access-Control-Allow-Origin': 'https://exit.moe',
+      'Access-Control-Allow-Origin': '*',
       'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
       'Access-Control-Allow-Headers': 'Content-Type',
       'Access-Control-Max-Age': '86400',
