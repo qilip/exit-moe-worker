@@ -26,7 +26,10 @@ router.post('/shorten', async req => {
     shortenedUrl,
   };
   return new Response(JSON.stringify(resBody), {
-    headers: { 'Content-Type': 'application/json' },
+    headers: {
+      'Content-Type': 'application/json',
+      'Access-Control-Allow-Origin': 'https://exit.moe',
+    },
     status: 200,
   });
 });
