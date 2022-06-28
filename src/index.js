@@ -6,13 +6,23 @@ const SLUG_LEAGTH = 6;
 const router = new Router();
 const nanoid = customAlphabet('0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ', SLUG_LEAGTH);
 
+function urlValidate (longUrl) {
+  const isUrlRegEx = /^(http|https):(\/)+[^ "]+\.[^ "]+$/i;
+  const isExitmoeRegEx = /^(http|https):(\/)+(.*\.)?(exit\.moe)(:[0-9]{1,5})?(\/.*)?$/i;
+  urlInvalid = !isUrlRegEx.test(longUrl);
+  urlExitmoe = isExitmoeRegEx.test(longUrl);
+  if(urlInvalid || urlExitmoe) return false;
+  else return true;
+};
+
 router.post('/shorten', async req => {
   let slug = nanoid();
   let length = SLUG_LEAGTH;
   const reqBody = await req.json();
-  if(undefined === reqBody?.url){
-    return new Response('Missing url', { status: 400 });
-  }
+  if(reqBody?.url === undefined) return new Response('Missing url', { status: 400 });
+  if(urlValidate(reqBody.url) === false) return new Response('Invalid url', { status: 400 });
+  if(reqBody.url.length >= 2048) return new Response('Url too long', { status: 400 });
+
   while(await SURL.get(slug)){
     length++;
     slug = nanoid(length);
