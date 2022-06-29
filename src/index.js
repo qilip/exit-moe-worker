@@ -15,13 +15,21 @@ function urlValidate (longUrl) {
   else return true;
 };
 
+const headers = {
+  'Content-Type': 'application/json',
+  'Access-Control-Allow-Origin': '*',
+}
+
 router.post('/shorten', async req => {
   let slug = nanoid();
   let length = SLUG_LEAGTH;
   const reqBody = await req.json();
-  if(reqBody?.url === undefined) return new Response('Missing url', { status: 400 });
-  if(urlValidate(reqBody.url) === false) return new Response('Invalid url', { status: 400 });
-  if(reqBody.url.length >= 2048) return new Response('Url too long', { status: 400 });
+  if (reqBody?.url === undefined)
+    return new Response(JSON.stringify({ message: 'Missing url' }), { headers, status: 400 });
+  if (urlValidate(reqBody.url) === false)
+    return new Response(JSON.stringify({ message: 'Invalid url' }), { headers, status: 400 });
+  if (reqBody.url.length >= 2048)
+    return new Response(JSON.stringify({ message: 'Url too long' }), { headers, status: 400 });
 
   while(await SURL.get(slug)){
     length++;
@@ -36,10 +44,7 @@ router.post('/shorten', async req => {
     shortenedUrl,
   };
   return new Response(JSON.stringify(resBody), {
-    headers: {
-      'Content-Type': 'application/json',
-      'Access-Control-Allow-Origin': '*',
-    },
+    headers,
     status: 200,
   });
 });
