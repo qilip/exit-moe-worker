@@ -1,5 +1,6 @@
 import { Router } from 'itty-router';
 import { customAlphabet } from 'nanoid';
+import Toucan from 'toucan-js';
 
 const SLUG_LEAGTH = 6;
 
@@ -20,10 +21,11 @@ const headers = {
   'Access-Control-Allow-Origin': '*',
 }
 
-router.post('/shorten', async req => {
+router.post('/shorten', async (req, sentry) => {
   let slug = nanoid();
   let length = SLUG_LEAGTH;
   const reqBody = await req.json();
+  sentry.setRequestBody(reqBody);
   if (reqBody?.url === undefined)
     return new Response(JSON.stringify({ message: 'Missing url' }), { headers, status: 400 });
   if (urlValidate(reqBody.url) === false)
@@ -77,5 +79,19 @@ router.all('*', async req => {
 });
 
 addEventListener('fetch', event => {
-  event.respondWith(router.handle(event.request))
+  const sentry = new Toucan({
+    dsn: SENTRY_DSN,
+    context: event,
+    allowedHeaders: /(.*)/,
+    allowedSearchParams: /(.*)/,
+  });
+  sentry.setUser({ ip_address: event.request.headers.get('CF-Connecting-IP') });
+
+  event.respondWith(
+    router.handle(event.request, sentry)
+      .catch(error => {
+        sentry.captureException(error);
+        return new Response('Internal server error', { status: 500 });
+      })
+  );
 })
