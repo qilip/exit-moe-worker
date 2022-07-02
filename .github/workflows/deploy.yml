@@ -18,4 +18,12 @@ jobs:
         with:
           apiToken: ${{ secrets.CF_API_TOKEN }}
           accountId: ${{ secrets.CF_ACCOUNT_ID }}
-
+      - name: Sentry Release
+        uses: getsentry/action-release@v1.0.0
+        env:
+          SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
+          SENTRY_ORG: rootabyss
+          SENTRY_PROJECT: exit-moe-worker
+        with:
+          environment: production
+          # sourcemaps: ./dist TODO: add build sourcemap
